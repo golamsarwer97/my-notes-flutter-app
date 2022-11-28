@@ -6,7 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './screens/login_view.dart';
-import './screens/register_view.dart';
+// import './screens/register_view.dart';
+import './screens/home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +42,31 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: RegisterView(),
-      home: LoginView(),
+      // home: LoginView(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapShot) {
+          if (snapShot.connectionState == ConnectionState.active) {
+            if (snapShot.hasData) {
+              return MyHomePage();
+            } else if (snapShot.hasError) {
+              return Center(
+                child: Text(snapShot.error.toString()),
+              );
+            }
+          }
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                // color: Colors.white,
+                backgroundColor: Colors.transparent,
+              ),
+            );
+          }
+
+          return LoginView();
+        },
+      ),
     );
   }
 }
