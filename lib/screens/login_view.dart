@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
 
+import 'dart:developer' as devtools show log;
+
 import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './home_view.dart';
@@ -72,17 +73,17 @@ class _LoginViewState extends State<LoginView> {
                       email: email,
                       password: password,
                     );
-                    print(userCredential);
+                    devtools.log(userCredential.toString());
                     await Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => MyHomePage()),
                     );
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'user-not-found') {
-                      print('User not found');
+                      devtools.log('User not found');
                     } else if (e.code == 'wrong-password') {
-                      print('Wrong Password');
+                      devtools.log('Wrong Password');
                     }
-                    print(e.code);
+                    devtools.log(e.code);
                   }
                 },
                 child: Text('Login'),

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import './login_view.dart';
+
 class VerifiedEmail extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -23,6 +25,14 @@ class VerifiedEmail extends StatelessWidget {
               await user!.sendEmailVerification();
             },
             child: Text('Send verification email'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginView()),
+              );
+            },
+            child: Text('Go to the Login Page !!'),
           ),
         ],
       ),

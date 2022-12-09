@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
+import 'dart:developer' as devtools show log;
+
 import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_notes_flutter/screens/login_view.dart';
+
+import '../screens/login_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -37,13 +39,6 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       body: FutureBuilder(
         builder: (context, snapshot) {
-          // switch (snapshot.connectionState) {
-          //   case ConnectionState.done:
-          //     break;
-          //   default:
-          //     return const Text('Loading...');
-          // }
-
           return Column(
             children: [
               TextField(
@@ -73,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
                       email: email,
                       password: password,
                     );
-                    print(userCredential);
+                    devtools.log(userCredential.toString());
                     setState(() {
                       userCredential.additionalUserInfo!.isNewUser
                           ? isRegister = true
@@ -81,13 +76,13 @@ class _RegisterViewState extends State<RegisterView> {
                     });
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
-                      print('Weak Password');
+                      devtools.log('Weak Password');
                     } else if (e.code == 'email-already-in-use') {
-                      print('Email is already in use');
+                      devtools.log('Email is already in use');
                     } else if (e.code == 'invalid-email') {
-                      print('Invalid email entered');
+                      devtools.log('Invalid email entered');
                     } else {
-                      print(e.code);
+                      devtools.log(e.code);
                     }
                   }
                 },
