@@ -28,8 +28,9 @@ class VerifiedEmail extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => LoginView()),
+                (_) => false,
               );
             },
             child: Text('Go to the Login Page !!'),

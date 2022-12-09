@@ -91,8 +91,9 @@ class _RegisterViewState extends State<RegisterView> {
               // SizedBox(height: 50),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => LoginView()),
+                    (_) => false,
                   );
                 },
                 child: Text(isRegister

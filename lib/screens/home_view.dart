@@ -38,8 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
         } else {
           devtools.log('you need to verify email first');
           Future.delayed(Duration.zero, () {
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => VerifiedEmail()),
+              (_) => false,
             );
           });
         }

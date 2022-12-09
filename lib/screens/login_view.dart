@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import './home_view.dart';
 import './register_view.dart';
+import '../utilities/show_custom_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -74,16 +75,23 @@ class _LoginViewState extends State<LoginView> {
                       password: password,
                     );
                     devtools.log(userCredential.toString());
-                    await Navigator.of(context).pushReplacement(
+                    await Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => MyHomePage()),
+                      (_) => false,
                     );
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'user-not-found') {
-                      devtools.log('User not found');
+                      // devtools.log('User not found');
+                      await showErrorDialog(context, 'User not found');
                     } else if (e.code == 'wrong-password') {
-                      devtools.log('Wrong Password');
+                      // devtools.log('Wrong Password');
+                      await showErrorDialog(context, 'Wrong Password');
+                    } else {
+                      devtools.log(e.code);
+                      await showErrorDialog(context, e.code);
                     }
-                    devtools.log(e.code);
+                  } catch (e) {
+                    await showErrorDialog(context, 'Error: ${e.toString()}');
                   }
                 },
                 child: Text('Login'),
