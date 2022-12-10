@@ -18,7 +18,13 @@ class VerifiedEmail extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10),
-          Text('Please Verify Your Email'),
+          Text(
+            "We've sent you an email verification. Please open it to verify your account.",
+          ),
+          SizedBox(height: 10),
+          Text(
+            "If you haven't received a verification email yet, press the button below.",
+          ),
           TextButton(
             onPressed: () async {
               final user = _auth.currentUser;

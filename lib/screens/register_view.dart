@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
 
 import 'dart:developer' as devtools show log;
 
@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../screens/login_view.dart';
+import '../screens/verify_email_view.dart';
+import '../utilities/show_custom_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -69,6 +71,14 @@ class _RegisterViewState extends State<RegisterView> {
                       password: password,
                     );
                     devtools.log(userCredential.toString());
+
+                    final user = _auth.currentUser;
+                    await user!.sendEmailVerification();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => VerifiedEmail()),
+                      (_) => false,
+                    );
+
                     setState(() {
                       userCredential.additionalUserInfo!.isNewUser
                           ? isRegister = true
@@ -76,14 +86,20 @@ class _RegisterViewState extends State<RegisterView> {
                     });
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
-                      devtools.log('Weak Password');
+                      // devtools.log('Weak Password');
+                      await showErrorDialog(context, 'Weak Password');
                     } else if (e.code == 'email-already-in-use') {
-                      devtools.log('Email is already in use');
+                      // devtools.log('Email is already in use');
+                      await showErrorDialog(context, 'Email is already in use');
                     } else if (e.code == 'invalid-email') {
-                      devtools.log('Invalid email entered');
+                      // devtools.log('Invalid email entered');
+                      await showErrorDialog(context, 'Invalid email entered');
                     } else {
                       devtools.log(e.code);
+                      await showErrorDialog(context, e.code);
                     }
+                  } catch (e) {
+                    await showErrorDialog(context, 'Error: ${e.toString()}');
                   }
                 },
                 child: Text('Register'),
@@ -97,7 +113,7 @@ class _RegisterViewState extends State<RegisterView> {
                   );
                 },
                 child: Text(isRegister
-                    ? 'Go to the Login Page !!'
+                    ? 'You registered successfully. Go to the Login Page !!'
                     : 'Already registered? Login here!!'),
               ),
             ],
